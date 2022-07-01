@@ -13,7 +13,7 @@ function addToCartClicked(event) {
     const itemPrice = item.querySelector('.item-price').textContent;
     const itemImage = item.querySelector('.item-image').src;
     
-addItemToShoppingCart(itemTitle, itemPrice, itemImage)
+addItemToShoppingCart(itemTitle, itemPrice, itemImage);
 }
 
 function addItemToShoppingCart(itemTitle, itemPrice, itemImage){
@@ -43,4 +43,18 @@ function addItemToShoppingCart(itemTitle, itemPrice, itemImage){
      </div>`;
      shoppingCartRow.innerHTML = shoppingCartContent;
      shoppingCartItemsContainer.append(shoppingCartRow);
+
+     updateShoppingCartTotal()
+}
+
+function updateShoppingCartTotal() {
+    let total = 0;
+    const shoppingCartTotal = document.querySelector('.shoppingCartTotal');
+
+    const shoppingCartItems = document.querySelectorAll('.shoppingCartItem');
+ 
+    shoppingCartItems.forEach((shoppingCartItem) => {
+        const shoppingCartItemPriceElement = shoppingCartItem.querySelector('.shoppingCartItemPrice');
+        console.log("🚀 ~ file: tienda.js ~ line 56 ~ updateShoppingCartTotal ~ shoppingCartItemPriceElement", shoppingCartItemPriceElement);
+    });
 }
