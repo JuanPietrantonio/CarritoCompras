@@ -3,6 +3,9 @@ addToShoppingCartButtons.forEach((addToCartButton) => {
     addToCartButton.addEventListener('click', addToCartClicked);
 });
 
+const comprarButton =document.querySelector('.comprarButton');
+comprarButton.addEventListener('click', comprarButtonClicked);
+
 const shoppingCartItemsContainer = document.querySelector('.shoppingCartItemsContainer');
 
 function addToCartClicked(event) {
@@ -17,6 +20,19 @@ addItemToShoppingCart(itemTitle, itemPrice, itemImage);
 }
 
 function addItemToShoppingCart(itemTitle, itemPrice, itemImage){
+
+    const elementsTitle = shoppingCartItemsContainer.getElementsByClassName('shoppingCartItemTitle');
+    for(let i =0; i <elementsTitle.length; i++) {
+        if (elementsTitle[i].innerText === itemTitle){
+          let elementQuantity =  elementsTitle[i].parentElement.parentElement.parentElement.querySelector('.shoppingCartItemQuantity');
+          elementQuantity.value++;
+          $('.toast').toast('show');
+          updateShoppingCartTotal();
+          return;
+        }
+        
+    }
+
    const shoppingCartRow = document.createElement('div');
    const shoppingCartContent = `
    <div class="row shoppingCartItem">
@@ -44,6 +60,10 @@ function addItemToShoppingCart(itemTitle, itemPrice, itemImage){
      shoppingCartRow.innerHTML = shoppingCartContent;
      shoppingCartItemsContainer.append(shoppingCartRow);
 
+     shoppingCartRow.querySelector('.buttonDelete').addEventListener('click', removeShoppingCartItem);
+
+     shoppingCartRow.querySelector('.shoppingCartItemQuantity').addEventListener('change', quantityChanged)
+
      updateShoppingCartTotal()
 }
 
@@ -55,6 +75,32 @@ function updateShoppingCartTotal() {
  
     shoppingCartItems.forEach((shoppingCartItem) => {
         const shoppingCartItemPriceElement = shoppingCartItem.querySelector('.shoppingCartItemPrice');
-        console.log("🚀 ~ file: tienda.js ~ line 56 ~ updateShoppingCartTotal ~ shoppingCartItemPriceElement", shoppingCartItemPriceElement);
+
+        const shoppingCartItemPrice = Number(shoppingCartItemPriceElement.textContent.replace('€', " "));
+
+        const shoppingCartItemQuantityElement = shoppingCartItem.querySelector('.shoppingCartItemQuantity');
+
+        const shoppingCartItemQuantity = Number(shoppingCartItemQuantityElement.value);
+            total = total + shoppingCartItemPrice * shoppingCartItemQuantity;
+            console.log("🚀 ~ file: tienda.js ~ line 63 ~ shoppingCartItems.forEach ~ total", total)
     });
+    shoppingCartTotal.innerHTML = `${total.toFixed(2)}€`;
+} 
+
+function removeShoppingCartItem(event) {
+    const buttonClicked = event.target;
+    buttonClicked.closest('.shoppingCartItem').remove();
+    updateShoppingCartTotal();
+}
+
+function quantityChanged (event) {
+   const input = event.target;
+   if (input.value <= 0) {
+    input.value = 1;}
+    updateShoppingCartTotal();
+}
+
+function comprarButtonClicked(){
+    shoppingCartItemsContainer.innerHTML = '';
+    updateShoppingCartTotal();
 }
